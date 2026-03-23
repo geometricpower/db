@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geometric Power 2026 Master Content Gantt</title>
+  <style>
+    :root {
+      --brand: #039403;
+      --brand-dark: #027a02;
+      --brand-soft: #e9f8e9;
+      --brand-soft-2: #f6fff6;
+      --text: #1e2a1e;
+      --muted: #617061;
+      --line: #dce8dc;
+      --white: #ffffff;
+      --shadow: 0 10px 30px rgba(3, 148, 3, 0.08);
+      --radius: 18px;
+      --month-width: 110px;
+      --week-width: 28px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: #fff; color: var(--text); }
+    body { min-height: 100vh; }
+
+    .app {
+      display: grid;
+      grid-template-columns: 330px 1fr;
+      min-height: 100vh;
+      background: var(--white);
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff 0%, #fbfffb 100%);
+      padding: 22px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: var(--brand);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+    }
+
+    .brand h1 {
+      font-size: 19px;
+      line-height: 1.1;
+      margin: 0;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel h3 {
+      margin: 0 0 10px;
+      color: var(--brand);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus, select:focus, button:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px rgba(3, 148, 3, 0.08);
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stack > div { margin-bottom: 10px; }
+    .stack > div:last-child { margin-bottom: 0; }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .btn-soft {
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: var(--brand-soft-2);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      flex: 0 0 auto;
+    }
+
+    .main {
+      min-width: 0;
+      background: #fff;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 22px 24px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .topbar p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar button {
+      width: auto;
+      cursor: pointer;
+      padding: 10px 14px;
+    }
+
+    .toolbar button.active,
+    .toolbar button:hover {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: linear-gradient(180deg, #fff 0%, #fbfffb 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .stat .label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .stat .value {
+      margin-top: 6px;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--brand);
+    }
+
+    .content {
+      padding: 20px 24px 28px;
+    }
+
+    .gantt-shell {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      background: #fff;
+    }
+
+    .gantt {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      min-width: 1260px;
+    }
+
+    .labels-pane {
+      border-right: 1px solid var(--line);
+      position: sticky;
+      left: 0;
+      z-index: 12;
+      background: #fff;
+    }
+
+    .timeline-pane {
+      overflow: auto;
+      position: relative;
+      background: #fff;
+    }
+
+    .head {
+      position: sticky;
+      top: 0;
+      z-index: 15;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .head-labels, .head-timeline {
+      height: 66px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      font-weight: 700;
+      color: var(--brand);
+      background: linear-gradient(180deg, #fff 0%, #fbfffb 100%);
+    }
+
+    .labels-body, .timeline-body {
+      position: relative;
+    }
+
+    .row-label, .row-grid {
+      height: 68px;
+      border-bottom: 1px solid #edf5ed;
+      position: relative;
+      background: #fff;
+    }
+
+    .row-label.group, .row-grid.group {
+      height: 56px;
+      background: var(--brand-soft-2);
+    }
+
+    .row-label {
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 10px;
+    }
+
+    .group-title {
+      font-weight: 800;
+      color: var(--brand);
+      font-size: 14px;
+    }
+
+    .toggle {
+      width: 20px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 800;
+      color: var(--brand);
+    }
+
+    .task-block {
+      min-width: 0;
+    }
+
+    .task-title {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 5px;
+    }
+
+    .task-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .timeline-header-inner {
+      position: relative;
+      height: 66px;
+    }
+
+    .quarter-band {
+      position: absolute;
+      top: 8px;
+      height: 18px;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      white-space: nowrap;
+    }
+
+    .month-cell {
+      position: absolute;
+      top: 30px;
+      bottom: 0;
+      border-right: 1px solid var(--line);
+      padding: 9px 8px;
+      font-size: 12px;
+      color: var(--muted);
+      background: linear-gradient(180deg, #fff 0%, #fbfffb 100%);
+    }
+
+    .row-grid {
+      background-image: linear-gradient(to right, rgba(3,148,3,0.05) 1px, transparent 1px);
+      background-size: var(--grid-unit) 100%;
+    }
+
+    .campaign-strip {
+      position: absolute;
+      top: 10px;
+      height: 10px;
+      border-radius: 999px;
+      opacity: 0.18;
+    }
+
+    .taskbar {
+      position: absolute;
+      top: 24px;
+      height: 28px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(3, 148, 3, 0.18);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .taskbar:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(3, 148, 3, 0.24);
+    }
+
+    .taskbar.milestone {
+      width: 16px !important;
+      height: 16px;
+      top: 26px;
+      border-radius: 4px;
+      transform: rotate(45deg);
+      padding: 0;
+    }
+
+    .taskbar.milestone:hover {
+      transform: rotate(45deg) scale(1.08);
+    }
+
+    .today-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(30,42,30,0.45);
+      z-index: 6;
+    }
+
+    .today-pill {
+      position: absolute;
+      top: 36px;
+      transform: translateX(-50%);
+      background: #1e2a1e;
+      color: #fff;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      z-index: 16;
+      white-space: nowrap;
+    }
+
+    .details {
+      margin-top: 16px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      background: linear-gradient(180deg, #fff 0%, #fbfffb 100%);
+    }
+
+    .details h3 {
+      margin: 0 0 8px;
+      color: var(--brand);
+      font-size: 18px;
+    }
+
+    .details p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .detail-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .detail-card .k {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .detail-card .v {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    @media (max-width: 1180px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="badge">GP</div>
+        <div>
+          <h1>2026 Master Content Gantt</h1>
+          <p>Interactive calendar timeline</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Filters</h3>
+        <div class="stack">
+          <div>
+            <label for="searchInput">Search</label>
+            <input id="searchInput" type="text" placeholder="Search topic, month, campaign..." />
+          </div>
+          <div>
+            <label for="quarterFilter">Quarter</label>
+            <select id="quarterFilter">
+              <option value="all">All quarters</option>
+            </select>
+          </div>
+          <div>
+            <label for="campaignFilter">Campaign</label>
+            <select id="campaignFilter">
+              <option value="all">All campaigns</option>
+            </select>
+          </div>
+          <div class="grid2">
+            <div>
+              <label for="monthStartFilter">Start month</label>
+              <select id="monthStartFilter"></select>
+            </div>
+            <div>
+              <label for="monthEndFilter">End month</label>
+              <select id="monthEndFilter"></select>
+            </div>
+          </div>
+          <div>
+            <label for="platformFilter">Platform</label>
+            <select id="platformFilter">
+              <option value="all">All platforms</option>
+              <option>Instagram</option>
+              <option>LinkedIn</option>
+              <option>Website-Blog</option>
+              <option>FB</option>
+              <option>X</option>
+            </select>
+          </div>
+          <div>
+            <label for="formatFilter">Content Type</label>
+            <select id="formatFilter">
+              <option value="all">All formats</option>
+              <option>Video</option>
+              <option>Still Creatives</option>
+              <option>Infographics</option>
+              <option>Articles</option>
+            </select>
+          </div>
+          <div class="grid2">
+            <button id="applyFilters" class="btn-primary">Apply filters</button>
+            <button id="resetFilters" class="btn-soft">Reset</button>
+          </div>
+          <div>
+            <button id="jumpToStart" class="btn-soft">Jump to 23 March</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Publishing channel(s)</h3>
+        <div class="chips">
+          <div class="chip">Instagram</div>
+          <div class="chip">LinkedIn</div>
+          <div class="chip">Website-Blog</div>
+          <div class="chip">FB</div>
+          <div class="chip">X</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Format</h3>
+        <div class="chips">
+          <div class="chip">Video</div>
+          <div class="chip">Still Creatives</div>
+          <div class="chip">Infographics</div>
+          <div class="chip">Articles</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Campaign legend</h3>
+        <div class="chips" id="campaignLegend"></div>
+      </div>
+
+      <div class="panel">
+        <h3>How to use</h3>
+        <p class="hint">Choose your filters, click <strong>Apply filters</strong>, then explore the calendar. Click any task bar to load its full details below the chart. Use month or week view to zoom in or out.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h2>Geometric Power Group 2026</h2>
+          <p>Campaign-based master content calendar with international days, executive content, and newsletter moments.</p>
+        </div>
+        <div class="toolbar">
+          <button class="zoomBtn active" data-view="month">Month view</button>
+          <button class="zoomBtn" data-view="week">Week view</button>
+          <button id="expandGroups">Expand all</button>
+          <button id="collapseGroups">Collapse groups</button>
+        </div>
+      </div>
+
+      <section class="stats">
+        <div class="stat">
+          <div class="label">Visible items</div>
+          <div class="value" id="statItems">0</div>
+        </div>
+        <div class="stat">
+          <div class="label">Campaigns</div>
+          <div class="value" id="statCampaigns">0</div>
+        </div>
+        <div class="stat">
+          <div class="label">International days</div>
+          <div class="value" id="statIntl">0</div>
+        </div>
+        <div class="stat">
+          <div class="label">INSPIRE editions</div>
+          <div class="value" id="statInspire">0</div>
+        </div>
+      </section>
+
+      <div class="content">
+        <div class="gantt-shell">
+          <div class="gantt">
+            <div class="labels-pane">
+              <div class="head"><div class="head-labels">Master content items</div></div>
+              <div id="labelsBody" class="labels-body"></div>
+            </div>
+            <div id="timelinePane" class="timeline-pane">
+              <div class="head"><div id="timelineHeader" class="timeline-header-inner"></div></div>
+              <div id="timelineBody" class="timeline-body"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="detailsPanel" class="details">
+          <h3>Select a content item</h3>
+          <p>Click any bar to view the content description, quarter, campaign, channels, format, date, and strategic goal.</p>
+          <div class="detail-grid">
+            <div class="detail-card"><div class="k">Campaign</div><div class="v">-</div></div>
+            <div class="detail-card"><div class="k">Quarter</div><div class="v">-</div></div>
+            <div class="detail-card"><div class="k">Publishing channel(s)</div><div class="v">Instagram / LinkedIn / Website-Blog / FB / X</div></div>
+            <div class="detail-card"><div class="k">Format</div><div class="v">-</div></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const CHANNELS = 'Instagram / LinkedIn / Website-Blog / FB / X';
+    const CAMPAIGN_COLORS = {
+      '#PoweringEverydayLife': '#039403',
+      '#PowerToProduction': '#16a516',
+      '#PoweringTheFuture': '#2ab82a',
+      '#PoweringNigeria': '#027a02'
+    };
+
+    const GROUPS = [
+      { id: 'Q1', title: 'Q1 2026 · #PoweringEverydayLife', quarter: 'Q1', campaign: '#PoweringEverydayLife' },
+      { id: 'Q2', title: 'Q2 2026 · #PowerToProduction', quarter: 'Q2', campaign: '#PowerToProduction' },
+      { id: 'Q3', title: 'Q3 2026 · #PoweringTheFuture', quarter: 'Q3', campaign: '#PoweringTheFuture' },
+      { id: 'Q4', title: 'Q4 2026 · #PoweringNigeria', quarter: 'Q4', campaign: '#PoweringNigeria' }
+    ];
+
+    const ITEMS = [
+      { group:'Q1', quarter:'Q1', campaign:'#PoweringEverydayLife', title:'International Day Activations', start:'2026-01-08', end:'2026-01-31', rawType:'Video Posts', description:'January awareness-led video activations built around relevant international day moments tied to energy, community, and development themes.', goal:'Visibility / Consistency', intl:true },
+      { group:'Q1', quarter:'Q1', campaign:'#PoweringEverydayLife', title:'Women in Science: Engineers Powering GP', start:'2026-02-11', end:'2026-02-11', rawType:'Video', description:'Feature on female engineers powering Geometric Power operations, tied to the International Day of Women and Girls in Science.', goal:'CSR / Diversity', intl:true },
+      { group:'Q1', quarter:'Q1', campaign:'#PoweringEverydayLife', title:'Other February International Day Activations', start:'2026-02-14', end:'2026-02-26', rawType:'Video', description:'Supplementary February video content aligned with global awareness days relevant to community, workforce, and sustainability themes.', goal:'Engagement / Awareness', intl:true },
+      { group:'Q1', quarter:'Q1', campaign:'#PoweringEverydayLife', title:'The Industrial Pulse: Powering Aba’s Manufacturing Sector', start:'2026-02-23', end:'2026-02-23', rawType:'Video', description:'Short documentary-style story showing how reliable power is improving output and business stability for manufacturers in Aba.', goal:'Economic Proof', intl:false },
+      { group:'Q1', quarter:'Q1', campaign:'#PoweringEverydayLife', title:'MegaWatt Metrics: February Uptime Performance', start:'2026-02-28', end:'2026-02-28', rawType:'Infographic', description:'Data-led visual reporting February uptime performance and reliability metrics.', goal:'Transparency / Trust', intl:false },
+      { group:'Q1', quarter:'Q1', campaign:'#PoweringEverydayLife', title:'Inside the Grid: Engineering Reliable Power', start:'2026-03-04', end:'2026-03-04', rawType:'Video', description:'World Engineering Day content focused on turbines, systems, and the engineering backbone of GP’s stability.', goal:'Technical Authority', intl:true },
+      { group:'Q1', quarter:'Q1', campaign:'#PoweringEverydayLife', title:'Next Generation of Female Engineers', start:'2026-03-08', end:'2026-03-08', rawType:'Video', description:'International Women’s Day storytelling focused on female talent, growth, and visibility in the power sector.', goal:'Brand Awareness', intl:true },
+      { group:'Q1', quarter:'Q1', campaign:'#PoweringEverydayLife', title:'Environmental Stewardship Across Pipeline Communities', start:'2026-03-21', end:'2026-03-21', rawType:'Video', description:'International Day of Forests content highlighting environmental care, land stewardship, and pipeline corridor responsibility.', goal:'ESG Positioning', intl:true },
+      { group:'Q1', quarter:'Q1', campaign:'#PoweringEverydayLife', title:'Community Impact: CSR in Osisioma', start:'2026-03-22', end:'2026-03-22', rawType:'Video', description:'World Water Day activation spotlighting community-oriented CSR work in Osisioma.', goal:'Community Trust', intl:true },
+      { group:'Q1', quarter:'Q1', campaign:'#PowerToProduction', title:'From Power to Production: Industrial Growth in Aba', start:'2026-03-24', end:'2026-03-24', rawType:'Video', description:'The late-March campaign shift that shows how stable electricity translates into visible production, movement, and industrial activity.', goal:'Economic Impact', intl:false },
+      { group:'Q1', quarter:'Q1', campaign:'#PowerToProduction', title:'The Industrial Multiplier: 5 Business Impacts of Stable Power', start:'2026-03-27', end:'2026-03-27', rawType:'Still Creative', description:'A clear breakdown of how reliable power affects profit, output, equipment stability, growth, and jobs.', goal:'Education / Engagement', intl:false },
+      { group:'Q1', quarter:'Q1', campaign:'#PowerToProduction', title:'Beyond Megawatts: Governance Drives Power Success', start:'2026-03-31', end:'2026-03-31', rawType:'Article', description:'GMD-led leadership article showing that reliability depends on discipline, systems, governance, and institutional culture.', goal:'Authority / Credibility', intl:false },
+
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'The Road to ₦1 Trillion: How Power Drives Growth', start:'2026-04-02', end:'2026-04-02', rawType:'Infographic', description:'Economic framing piece connecting stable power to long-term scale and growth ambitions.', goal:'Vision Framing', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Medical Without Interruption', start:'2026-04-07', end:'2026-04-07', rawType:'Article', description:'World Health Day feature on stable power in hospitals and the end of routine blackouts in critical care environments.', goal:'Social Impact', intl:true },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Inside a GP-Powered Hospital', start:'2026-04-09', end:'2026-04-09', rawType:'Video', description:'Visual storytelling that follows the healthcare impact narrative with real-life scenes and proof.', goal:'Human Proof', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Energy Security is National Security', start:'2026-04-14', end:'2026-04-14', rawType:'Article', description:'Chairman perspective linking localized, reliable power to national economic resilience and development.', goal:'Policy Authority', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Key Insights from the Chairman’s Article', start:'2026-04-16', end:'2026-04-16', rawType:'Still Creative', description:'Carousel adaptation of the Chairman’s article to make the core ideas accessible and shareable.', goal:'Amplification', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Building a 3,000-Person Workforce', start:'2026-04-21', end:'2026-04-21', rawType:'Article', description:'GMD-led workforce story tying infrastructure growth to job creation, training, and organizational development.', goal:'Talent Positioning', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Cleaner Than Diesel: The Environmental Impact of GP', start:'2026-04-22', end:'2026-04-22', rawType:'Infographic', description:'Earth Day visual comparing centralized power performance with diesel dependence.', goal:'ESG', intl:true },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Meet the Engineers Behind the System', start:'2026-04-23', end:'2026-04-23', rawType:'Still Creative', description:'Human-centered engineering spotlight that complements April’s workforce narrative.', goal:'Human Connection', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'The Manufacturing Map: Aba Industrial Zones Powered by GP', start:'2026-04-27', end:'2026-04-27', rawType:'Still Creative', description:'A visual map-led story connecting reliable power to industrial cluster performance in Aba.', goal:'Economic Proof', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'From Outages to Output: SMEs in Aba', start:'2026-04-28', end:'2026-04-28', rawType:'Article', description:'MD APLE perspective on how consistent power helps SMEs expand, stabilize, and grow.', goal:'Impact', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'INSPIRE Newsletter · Edition 2', start:'2026-04-30', end:'2026-04-30', rawType:'Article', description:'Bi-monthly INSPIRE edition themed around “Powering Progress: From Stability to Scale.”', goal:'Distribution / Thought Leadership', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'The Night Shift: Powering Aba 24/7', start:'2026-05-01', end:'2026-05-01', rawType:'Video', description:'Workers’ Day content honoring operators and teams working behind the scenes.', goal:'Human Interest', intl:true },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Electricity Act 2023 Explained', start:'2026-05-05', end:'2026-05-05', rawType:'Article', description:'Chairman article translating policy reform into practical implications for the sector and businesses.', goal:'Policy Authority', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'What the Electricity Act Means for Businesses', start:'2026-05-07', end:'2026-05-07', rawType:'Infographic', description:'A simplified public-facing explanation of the Electricity Act for business audiences.', goal:'Education', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Women Powering the Grid', start:'2026-05-12', end:'2026-05-12', rawType:'Article', description:'Leadership article focused on women’s influence, expertise, and growth inside the power ecosystem.', goal:'Diversity / Leadership', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'The Vision Behind Geometric Power', start:'2026-05-14', end:'2026-05-14', rawType:'Still Creative', description:'Founder’s Day brand story reflecting on the long journey, persistence, and original vision behind the project.', goal:'Brand Heritage', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'How SCADA Enables Real-Time Power Management', start:'2026-05-17', end:'2026-05-17', rawType:'Still Creative', description:'World Telecommunication Day content that translates SCADA into practical system intelligence.', goal:'Tech Authority', intl:true },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Mini-Grids and Expansion Strategy', start:'2026-05-19', end:'2026-05-19', rawType:'Article', description:'MD APLE article focused on access expansion, growth logic, and broader energy reach.', goal:'Growth Narrative', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Power Beyond the City', start:'2026-05-21', end:'2026-05-21', rawType:'Still Creative', description:'Case-study style story showing reliable energy impact outside primary urban centers.', goal:'Impact Storytelling', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Gas + Renewables Strategy', start:'2026-05-26', end:'2026-05-26', rawType:'Article', description:'Balanced energy thought leadership piece on why gas and renewables must coexist for growth.', goal:'Thought Leadership', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'The Future Energy Mix Explained', start:'2026-05-28', end:'2026-05-28', rawType:'Infographic', description:'Easy-to-share visual summary of the energy mix conversation.', goal:'Education', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Cleaner Energy vs Diesel', start:'2026-06-05', end:'2026-06-05', rawType:'Infographic', description:'World Environment Day data visual comparing centralized power with thousands of diesel generators.', goal:'ESG Credibility', intl:true },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Corporate PPAs Explained', start:'2026-06-09', end:'2026-06-09', rawType:'Article', description:'MD APLE article on direct industrial supply structures and why they matter.', goal:'Industrial Positioning', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Industrial Testimonial', start:'2026-06-11', end:'2026-06-11', rawType:'Video', description:'Manufacturer testimonial validating the production and reliability narrative.', goal:'Proof', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Building a ₦1 Trillion Enterprise', start:'2026-06-16', end:'2026-06-16', rawType:'Article', description:'Chairman article on patience, scale, and long-term infrastructure ambition.', goal:'Investor Confidence', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Growth Milestones', start:'2026-06-18', end:'2026-06-18', rawType:'Infographic', description:'Visual timeline of growth milestones and key achievements.', goal:'Reinforcement', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Community Trust as Infrastructure', start:'2026-06-23', end:'2026-06-23', rawType:'Article', description:'GMD leadership piece reframing community trust and stakeholder relations as core infrastructure assets.', goal:'Social License', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Stories from Host Communities', start:'2026-06-25', end:'2026-06-25', rawType:'Still Creative', description:'Community-facing visual storytelling built around relationships and shared value.', goal:'Trust', intl:false },
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'Scaling Power Infrastructure (312MW Expansion)', start:'2026-06-30', end:'2026-06-30', rawType:'Article', description:'Infrastructure scale and execution piece closing Q2 on a serious note.', goal:'Credibility', intl:false },
+
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Financing Power at Scale', start:'2026-07-07', end:'2026-07-07', rawType:'Article', description:'GMD article exploring what makes infrastructure projects fundable and sustainable.', goal:'Investor Confidence', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'How Energy Infrastructure is Financed', start:'2026-07-09', end:'2026-07-09', rawType:'Infographic', description:'Public-facing summary of funding logic behind infrastructure.', goal:'Education', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Celebrating the Visionary Behind Geometric Power', start:'2026-07-13', end:'2026-07-13', rawType:'Video', description:'Chairman birthday leadership and legacy moment anchored on vision, persistence, and long-term impact.', goal:'Legacy / Emotional Connection', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Preparing the Southeast Grid for Phase 2 Expansion', start:'2026-07-14', end:'2026-07-14', rawType:'Article', description:'MD APLE article on the logic and readiness behind expansion planning.', goal:'Growth Narrative', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Training the Next Generation of Power Engineers', start:'2026-07-15', end:'2026-07-15', rawType:'Video', description:'World Youth Skills Day activation focused on GP Academy, trainees, and future talent.', goal:'Talent Positioning', intl:true },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Expansion Map: Where GP is Growing Next', start:'2026-07-16', end:'2026-07-16', rawType:'Still Creative', description:'Clear map-based storytelling about future growth zones and expansion direction.', goal:'Visibility', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Digitalization is the New Power Capacity', start:'2026-07-21', end:'2026-07-21', rawType:'Article', description:'GMD article connecting data, monitoring, and digital systems to efficiency.', goal:'Innovation Positioning', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Inside the Control Room', start:'2026-07-23', end:'2026-07-23', rawType:'Video', description:'Technical reel showing real-time decision-making and system visibility.', goal:'Technical Authority', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'From ₦194B to ₦1 Trillion: The Financial Roadmap', start:'2026-07-28', end:'2026-07-28', rawType:'Article', description:'Chairman article on financial architecture and scale.', goal:'Strategic Depth', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'The Numbers Behind Our Growth', start:'2026-07-30', end:'2026-07-30', rawType:'Infographic', description:'Metrics-led follow-up to July’s scale narrative.', goal:'Reinforcement', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Protecting Critical Infrastructure', start:'2026-08-04', end:'2026-08-04', rawType:'Article', description:'GMD article on cybersecurity, risk management, and infrastructure resilience.', goal:'Trust', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'How We Protect the Grid', start:'2026-08-06', end:'2026-08-06', rawType:'Infographic', description:'Risk and security visual summary.', goal:'Education', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Why Smart Grids Will Define Nigeria’s Future', start:'2026-08-11', end:'2026-08-11', rawType:'Article', description:'Chairman thought leadership piece on next-generation utility systems.', goal:'Thought Leadership', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Careers in Energy', start:'2026-08-12', end:'2026-08-12', rawType:'Video', description:'International Youth Day content encouraging young Nigerians to explore the power sector.', goal:'Engagement', intl:true },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Smart Grids Explained', start:'2026-08-13', end:'2026-08-13', rawType:'Video', description:'Simplified explainer to support the article conversation.', goal:'Education', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Building a Workforce for the Future', start:'2026-08-18', end:'2026-08-18', rawType:'Article', description:'MD APLE article connecting training and operational growth.', goal:'Talent Narrative', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'From Trainee to Engineer', start:'2026-08-20', end:'2026-08-20', rawType:'Still Creative', description:'Human story focused on development and career growth.', goal:'Human Story', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Strategic Roadmap to 2030', start:'2026-08-25', end:'2026-08-25', rawType:'Article', description:'Long-view Chairman article setting out the future path.', goal:'Vision', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Our Journey to 2030', start:'2026-08-27', end:'2026-08-27', rawType:'Still Creative', description:'Timeline-based visual to support the 2030 roadmap.', goal:'Clarity', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Community Impact Initiatives', start:'2026-09-05', end:'2026-09-05', rawType:'Still Creative', description:'International Day of Charity content highlighting GP’s community work and relationship-building.', goal:'Trust', intl:true },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Reliability as a Service', start:'2026-09-08', end:'2026-09-08', rawType:'Article', description:'MD APLE article reframing power as value delivered to industrial customers.', goal:'Insight', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Industrial Customer Story', start:'2026-09-10', end:'2026-09-10', rawType:'Still Creative', description:'A grounded, customer-facing proof point of the September value conversation.', goal:'Proof', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Battery Storage and Grid Stability', start:'2026-09-15', end:'2026-09-15', rawType:'Article', description:'Chairman article on the future role of storage in grid stability.', goal:'Innovation', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'How Battery Storage Works', start:'2026-09-17', end:'2026-09-17', rawType:'Infographic', description:'Visual explainer built to make the storage conversation easier to digest.', goal:'Education', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'EVs and Power Demand', start:'2026-09-22', end:'2026-09-22', rawType:'Infographic', description:'World Car-Free Day content tied to future mobility and grid demand.', goal:'Future Positioning', intl:true },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'Inside the GP Training Ecosystem', start:'2026-09-24', end:'2026-09-24', rawType:'Video', description:'Behind-the-scenes talent and knowledge-hub storytelling.', goal:'Engagement', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'EV Charging and the Future of Power Demand', start:'2026-09-29', end:'2026-09-29', rawType:'Article', description:'Forward-looking article on changing energy demand patterns.', goal:'Growth Narrative', intl:false },
+
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'True Independence is Energy Independence', start:'2026-10-01', end:'2026-10-01', rawType:'Video', description:'Independence Day content reframing national sovereignty through energy reliability.', goal:'National Positioning', intl:true },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Carbon Pricing and the Nigerian Power Sector', start:'2026-10-06', end:'2026-10-06', rawType:'Article', description:'Chairman article on future policy realities and strategic adaptation.', goal:'Policy Authority', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Carbon Pricing Explained', start:'2026-10-08', end:'2026-10-08', rawType:'Infographic', description:'Practical explainer for business and public audiences.', goal:'Education', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'What It Takes to Build Bankable Infrastructure', start:'2026-10-13', end:'2026-10-13', rawType:'Article', description:'GMD article focused on systems, governance, and delivery discipline.', goal:'Credibility', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Why Standards Matter in Power Infrastructure', start:'2026-10-14', end:'2026-10-14', rawType:'Still Creative', description:'World Standards Day content centered on quality, performance, and consistency.', goal:'Quality Positioning', intl:true },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'The Geometric Model Explained', start:'2026-10-15', end:'2026-10-15', rawType:'Still Creative', description:'Clear visual simplification of GP’s working model.', goal:'Clarity', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Grid Stability and Embedded Generation', start:'2026-10-20', end:'2026-10-20', rawType:'Article', description:'MD APLE technical perspective on why embedded generation works.', goal:'Technical Authority', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Inside the Control Room: Stability in Action', start:'2026-10-22', end:'2026-10-22', rawType:'Video', description:'Reel that makes the stability narrative visible.', goal:'Visibility', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Energy Transition in Africa: A Practical Path Forward', start:'2026-10-27', end:'2026-10-27', rawType:'Article', description:'Chairman article placing GP’s approach inside a continental transition conversation.', goal:'Thought Leadership', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Key Insight from Leadership', start:'2026-10-29', end:'2026-10-29', rawType:'Still Creative', description:'A short-form amplification asset built from the late-October thought leadership piece.', goal:'Amplification', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Why KPIs Define Infrastructure Success', start:'2026-11-03', end:'2026-11-03', rawType:'Article', description:'GMD article on measurement, governance, and infrastructure performance.', goal:'Credibility', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Our Performance Framework', start:'2026-11-05', end:'2026-11-05', rawType:'Infographic', description:'Visualized KPI framework for easy stakeholder understanding.', goal:'Transparency', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'The Science of Power Generation', start:'2026-11-10', end:'2026-11-10', rawType:'Video', description:'World Science Day content simplifying the technical science behind generation.', goal:'Education', intl:true },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'One Year Later: Aba’s Economic Transformation', start:'2026-11-12', end:'2026-11-12', rawType:'Article', description:'MD APLE impact piece measuring actual change one year on.', goal:'Economic Proof', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Predictive Maintenance and System Reliability', start:'2026-11-17', end:'2026-11-17', rawType:'Article', description:'Chairman article showing how data-led maintenance protects reliability.', goal:'Innovation', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Predictive Maintenance in Action', start:'2026-11-19', end:'2026-11-19', rawType:'Video', description:'Short-form content visualizing predictive maintenance on the ground.', goal:'Visibility', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Cybersecurity in Critical Infrastructure', start:'2026-11-24', end:'2026-11-24', rawType:'Article', description:'Risk-awareness and grid-protection leadership piece.', goal:'Risk Awareness', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'How We Protect the Grid', start:'2026-11-26', end:'2026-11-26', rawType:'Infographic', description:'Simplified cyber and systems protection visual.', goal:'Education', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'2026 in Review: Milestones & Lessons', start:'2026-12-01', end:'2026-12-01', rawType:'Article', description:'Chairman year-end review of wins, lessons, and strategic meaning.', goal:'Reflection', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'2026 Highlights', start:'2026-12-03', end:'2026-12-03', rawType:'Video', description:'Fast-moving recap of key moments across the year.', goal:'Momentum', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Staff Community Impact', start:'2026-12-05', end:'2026-12-05', rawType:'Still Creative', description:'Volunteer Day content recognizing staff-led community participation.', goal:'Human', intl:true },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Priorities for 2027', start:'2026-12-08', end:'2026-12-08', rawType:'Article', description:'GMD article on what comes next.', goal:'Forward Positioning', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'2027 Roadmap', start:'2026-12-10', end:'2026-12-10', rawType:'Infographic', description:'Visual summary of the coming year’s focus areas.', goal:'Clarity', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Customer Success Stories', start:'2026-12-15', end:'2026-12-15', rawType:'Article', description:'MD APLE-led year-end story of transformed customers and industries.', goal:'Impact', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Voices of Our Customers', start:'2026-12-17', end:'2026-12-17', rawType:'Video', description:'Customer compilation video that closes the proof loop.', goal:'Proof', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'A Message of Gratitude', start:'2026-12-22', end:'2026-12-22', rawType:'Article', description:'Joint Chairman and GMD gratitude message to teams, partners, and communities.', goal:'Relationship', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Season’s Greetings', start:'2026-12-24', end:'2026-12-24', rawType:'Still Creative', description:'Holiday message with warm brand tone.', goal:'Warmth', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'2030 Countdown: The Next Phase of Energy in Nigeria', start:'2026-12-29', end:'2026-12-29', rawType:'Article', description:'Forward-looking Chairman piece ending the year with ambition and vision.', goal:'Vision', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'Welcome 2027: Powering the Future Together', start:'2026-12-31', end:'2026-12-31', rawType:'Video', description:'Closing-year reel that transitions directly into next year’s narrative.', goal:'Closure', intl:false }
+    ,
+      { group:'Q2', quarter:'Q2', campaign:'#PowerToProduction', title:'INSPIRE Newsletter · Edition 3', start:'2026-06-30', end:'2026-06-30', rawType:'Article', description:'Bi-monthly INSPIRE edition focused on mid-year performance, stability, and expansion narrative.', goal:'Distribution / Thought Leadership', intl:false },
+      { group:'Q3', quarter:'Q3', campaign:'#PoweringTheFuture', title:'INSPIRE Newsletter · Edition 4', start:'2026-08-31', end:'2026-08-31', rawType:'Article', description:'Bi-monthly INSPIRE edition centered on innovation, talent, and future grid systems.', goal:'Distribution / Thought Leadership', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'INSPIRE Newsletter · Edition 5', start:'2026-10-30', end:'2026-10-30', rawType:'Article', description:'Bi-monthly INSPIRE edition capturing national positioning, policy, and system maturity.', goal:'Distribution / Thought Leadership', intl:false },
+      { group:'Q4', quarter:'Q4', campaign:'#PoweringNigeria', title:'INSPIRE Newsletter · Edition 6', start:'2026-12-25', end:'2026-12-25', rawType:'Article', description:'End-of-year INSPIRE edition reflecting on milestones, impact, and forward outlook.', goal:'Distribution / Thought Leadership', intl:false }
+    ].map(item => ({ ...item, format: normalizeFormat(item.rawType), channels: CHANNELS }));
+
+    function normalizeFormat(rawType) {
+      const v = String(rawType || '').toLowerCase();
+      if (v.includes('video')) return 'Video';
+      if (v.includes('infographic')) return 'Infographics';
+      if (v.includes('article')) return 'Articles';
+      return 'Still Creatives';
+    }
+
+    const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const YEAR_START = new Date('2026-01-01T00:00:00');
+    const YEAR_END = new Date('2026-12-31T00:00:00');
+    const START_MARK = new Date('2026-03-23T00:00:00');
+
+    const searchInput = document.getElementById('searchInput');
+    const platformFilter = document.getElementById('platformFilter');
+    const formatFilter = document.getElementById('formatFilter');
+    const quarterFilter = document.getElementById('quarterFilter');
+    const campaignFilter = document.getElementById('campaignFilter');
+    const monthStartFilter = document.getElementById('monthStartFilter');
+    const monthEndFilter = document.getElementById('monthEndFilter');
+    const applyFiltersBtn = document.getElementById('applyFilters');
+    const resetFiltersBtn = document.getElementById('resetFilters');
+    const jumpToStartBtn = document.getElementById('jumpToStart');
+    const labelsBody = document.getElementById('labelsBody');
+    const timelineHeader = document.getElementById('timelineHeader');
+    const timelineBody = document.getElementById('timelineBody');
+    const timelinePane = document.getElementById('timelinePane');
+    const campaignLegend = document.getElementById('campaignLegend');
+    const statItems = document.getElementById('statItems');
+    const statCampaigns = document.getElementById('statCampaigns');
+    const statIntl = document.getElementById('statIntl');
+    const statInspire = document.getElementById('statInspire');
+    const detailsPanel = document.getElementById('detailsPanel');
+
+    let currentView = 'month';
+    let collapsed = new Set();
+
+    function fillSelectOptions() {
+      [...new Set(ITEMS.map(i => i.quarter))].forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v; opt.textContent = v;
+        quarterFilter.appendChild(opt);
+      });
+      [...new Set(ITEMS.map(i => i.campaign))].forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v; opt.textContent = v;
+        campaignFilter.appendChild(opt);
+      });
+      MONTHS.forEach((m, idx) => {
+        const a = document.createElement('option');
+        a.value = idx; a.textContent = m;
+        monthStartFilter.appendChild(a);
+        const b = document.createElement('option');
+        b.value = idx; b.textContent = m;
+        monthEndFilter.appendChild(b);
+      });
+      monthStartFilter.value = 0;
+      monthEndFilter.value = 11;
+    }
+
+    function fillLegend() {
+      Object.entries(CAMPAIGN_COLORS).forEach(([name, color]) => {
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        chip.innerHTML = `<span class="dot" style="background:${color}"></span>${name}`;
+        campaignLegend.appendChild(chip);
+      });
+    }
+
+    function dateOf(value) {
+      return new Date(value + 'T00:00:00');
+    }
+
+    function formatDate(value) {
+      return dateOf(value).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function daysBetween(a, b) {
+      return Math.round((b - a) / (1000 * 60 * 60 * 24));
+    }
+
+    function getX(date) {
+      const d = typeof date === 'string' ? dateOf(date) : date;
+      if (currentView === 'month') {
+        const monthIndex = d.getMonth();
+        const dayIndex = d.getDate() - 1;
+        const daysInMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+        return monthIndex * parseInt(getComputedStyle(document.documentElement).getPropertyValue('--month-width')) + (dayIndex / daysInMonth) * parseInt(getComputedStyle(document.documentElement).getPropertyValue('--month-width'));
+      }
+      const totalDays = daysBetween(YEAR_START, d);
+      return (totalDays / 7) * parseInt(getComputedStyle(document.documentElement).getPropertyValue('--week-width'));
+    }
+
+    function getBarWidth(start, end) {
+      const x1 = getX(start);
+      const x2 = getX(end);
+      return Math.max(currentView === 'month' ? 12 : 16, x2 - x1 + (currentView === 'month' ? 12 : 18));
+    }
+
+    function getTotalWidth() {
+      if (currentView === 'month') return MONTHS.length * parseInt(getComputedStyle(document.documentElement).getPropertyValue('--month-width'));
+      return ((daysBetween(YEAR_START, YEAR_END) + 1) / 7) * parseInt(getComputedStyle(document.documentElement).getPropertyValue('--week-width')) + 48;
+    }
+
+    function getFilteredItems() {
+      const text = searchInput.value.trim().toLowerCase();
+      const q = quarterFilter.value;
+      const c = campaignFilter.value;
+      const ms = +monthStartFilter.value;
+      const me = +monthEndFilter.value;
+
+      return ITEMS.filter(item => {
+        const monthIndex = dateOf(item.start).getMonth();
+        const inMonthRange = monthIndex >= ms && monthIndex <= me;
+        const matchesText = !text || [item.title, item.description, item.quarter, item.campaign, item.goal, item.format].join(' ').toLowerCase().includes(text);
+        const matchesQuarter = q === 'all' || item.quarter === q;
+        const matchesCampaign = c === 'all' || item.campaign === c;
+        const matchesPlatform = platformFilter.value === 'all' || CHANNELS.includes(platformFilter.value);
+        const matchesFormat = formatFilter.value === 'all' || item.format === formatFilter.value;
+        return inMonthRange && matchesText && matchesQuarter && matchesCampaign && matchesPlatform && matchesFormat;
+      });
+    }
+
+    function renderHeader(totalWidth) {
+      timelineHeader.innerHTML = '';
+      timelineHeader.style.width = totalWidth + 'px';
+
+      const quarterBands = [
+        { label: 'Q1 · #PoweringEverydayLife', start: new Date('2026-01-01'), end: new Date('2026-03-31'), color: CAMPAIGN_COLORS['#PoweringEverydayLife'] },
+        { label: 'Q2 · #PowerToProduction', start: new Date('2026-04-01'), end: new Date('2026-06-30'), color: CAMPAIGN_COLORS['#PowerToProduction'] },
+        { label: 'Q3 · #PoweringTheFuture', start: new Date('2026-07-01'), end: new Date('2026-09-30'), color: CAMPAIGN_COLORS['#PoweringTheFuture'] },
+        { label: 'Q4 · #PoweringNigeria', start: new Date('2026-10-01'), end: new Date('2026-12-31'), color: CAMPAIGN_COLORS['#PoweringNigeria'] }
+      ];
+
+      quarterBands.forEach(q => {
+        const el = document.createElement('div');
+        el.className = 'quarter-band';
+        el.textContent = q.label;
+        el.style.left = (getX(q.start) + 8) + 'px';
+        el.style.width = Math.max(70, getX(q.end) - getX(q.start) + (currentView === 'month' ? 92 : 62)) + 'px';
+        el.style.background = q.color;
+        timelineHeader.appendChild(el);
+      });
+
+      MONTHS.forEach((m, idx) => {
+        const cell = document.createElement('div');
+        cell.className = 'month-cell';
+        cell.textContent = m;
+        const left = currentView === 'month' ? idx * parseInt(getComputedStyle(document.documentElement).getPropertyValue('--month-width')) : getX(new Date(2026, idx, 1));
+        const width = currentView === 'month'
+          ? parseInt(getComputedStyle(document.documentElement).getPropertyValue('--month-width'))
+          : getX(new Date(2026, idx + 1, 1)) - getX(new Date(2026, idx, 1));
+        cell.style.left = left + 'px';
+        cell.style.width = width + 'px';
+        timelineHeader.appendChild(cell);
+      });
+
+      const todayPill = document.createElement('div');
+      todayPill.className = 'today-pill';
+      todayPill.textContent = '23 Mar · robust calendar starts';
+      todayPill.style.left = getX(START_MARK) + 'px';
+      timelineHeader.appendChild(todayPill);
+    }
+
+    function renderDetails(item) {
+      detailsPanel.innerHTML = `
+        <h3>${item.title}</h3>
+        <p>${item.description}</p>
+        <div class="detail-grid">
+          <div class="detail-card"><div class="k">Campaign</div><div class="v">${item.campaign}</div></div>
+          <div class="detail-card"><div class="k">Quarter</div><div class="v">${item.quarter}</div></div>
+          <div class="detail-card"><div class="k">Publishing channel(s)</div><div class="v">${item.channels}</div></div>
+          <div class="detail-card"><div class="k">Format</div><div class="v">${item.format}</div></div>
+          <div class="detail-card"><div class="k">Start date</div><div class="v">${formatDate(item.start)}</div></div>
+          <div class="detail-card"><div class="k">End date</div><div class="v">${formatDate(item.end)}</div></div>
+          <div class="detail-card"><div class="k">Strategic goal</div><div class="v">${item.goal}</div></div>
+          <div class="detail-card"><div class="k">International day</div><div class="v">${item.intl ? 'Yes' : 'No'}</div></div>
+        </div>
+      `;
+    }
+
+    function render() {
+      const filtered = getFilteredItems();
+      const totalWidth = getTotalWidth();
+
+      statItems.textContent = filtered.length;
+      statCampaigns.textContent = new Set(filtered.map(i => i.campaign)).size;
+      statIntl.textContent = filtered.filter(i => i.intl).length;
+      statInspire.textContent = filtered.filter(i => i.title.toLowerCase().includes('inspire')).length;
+
+      labelsBody.innerHTML = '';
+      timelineBody.innerHTML = '';
+      timelineBody.style.width = totalWidth + 'px';
+      timelineBody.style.setProperty('--grid-unit', (currentView === 'month' ? parseInt(getComputedStyle(document.documentElement).getPropertyValue('--month-width')) : parseInt(getComputedStyle(document.documentElement).getPropertyValue('--week-width'))) + 'px');
+
+      renderHeader(totalWidth);
+
+      let renderedRows = 0;
+
+      GROUPS.forEach(group => {
+        const groupItems = filtered.filter(item => item.group === group.id);
+        if (!groupItems.length) return;
+
+        const groupCollapsed = collapsed.has(group.id);
+
+        const labelRow = document.createElement('div');
+        labelRow.className = 'row-label group';
+        labelRow.innerHTML = `
+          <div class="toggle">${groupCollapsed ? '▸' : '▾'}</div>
+          <div class="group-title">${group.title}</div>
+        `;
+        labelRow.querySelector('.toggle').onclick = () => {
+          if (collapsed.has(group.id)) collapsed.delete(group.id); else collapsed.add(group.id);
+          render();
+        };
+        labelsBody.appendChild(labelRow);
+
+        const gridGroupRow = document.createElement('div');
+        gridGroupRow.className = 'row-grid group';
+        const strip = document.createElement('div');
+        strip.className = 'campaign-strip';
+        const startDate = dateOf(groupItems.map(i => i.start).sort()[0]);
+        const endDate = dateOf(groupItems.map(i => i.end).sort().slice(-1)[0]);
+        strip.style.left = getX(startDate) + 'px';
+        strip.style.width = Math.max(30, getX(endDate) - getX(startDate) + (currentView === 'month' ? 100 : 34)) + 'px';
+        strip.style.background = CAMPAIGN_COLORS[group.campaign];
+        gridGroupRow.appendChild(strip);
+        timelineBody.appendChild(gridGroupRow);
+        renderedRows++;
+
+        if (!groupCollapsed) {
+          groupItems.forEach(item => {
+            const left = document.createElement('div');
+            left.className = 'row-label';
+            left.innerHTML = `
+              <div class="task-block">
+                <div class="task-title">${item.title}</div>
+                <div class="task-meta">
+                  <span>${item.format}</span>
+                  <span>${formatDate(item.start)}</span>
+                  <span>${item.intl ? 'International Day' : 'Campaign Content'}</span>
+                </div>
+              </div>
+            `;
+            labelsBody.appendChild(left);
+
+            const row = document.createElement('div');
+            row.className = 'row-grid';
+            const isMilestone = item.start === item.end;
+            const bar = document.createElement('div');
+            bar.className = 'taskbar' + (isMilestone ? ' milestone' : '');
+            bar.style.left = getX(item.start) + 'px';
+            bar.style.width = getBarWidth(item.start, item.end) + 'px';
+            bar.style.background = CAMPAIGN_COLORS[item.campaign];
+            if (!isMilestone) bar.textContent = item.title;
+            bar.title = `${item.title}
+${formatDate(item.start)}${item.start !== item.end ? ' to ' + formatDate(item.end) : ''}
+${item.goal}`;
+            bar.onclick = () => renderDetails(item);
+            row.appendChild(bar);
+            timelineBody.appendChild(row);
+            renderedRows++;
+          });
+        }
+      });
+
+      timelineBody.style.height = (renderedRows * 68) + 'px';
+
+      if (filtered.length > 0) {
+        renderDetails(filtered[0]);
+      } else {
+        detailsPanel.innerHTML = `
+          <h3>No content matches this filter</h3>
+          <p>Adjust the filters and click <strong>Apply filters</strong> again.</p>
+          <div class="detail-grid">
+            <div class="detail-card"><div class="k">Campaign</div><div class="v">-</div></div>
+            <div class="detail-card"><div class="k">Quarter</div><div class="v">-</div></div>
+            <div class="detail-card"><div class="k">Publishing channel(s)</div><div class="v">${CHANNELS}</div></div>
+            <div class="detail-card"><div class="k">Format</div><div class="v">-</div></div>
+          </div>
+        `;
+      }
+
+      const line = document.createElement('div');
+      line.className = 'today-line';
+      line.style.left = getX(START_MARK) + 'px';
+      timelineBody.appendChild(line);
+    }
+
+    fillSelectOptions();
+    fillLegend();
+    render();
+
+    applyFiltersBtn.addEventListener('click', render);
+
+    resetFiltersBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      quarterFilter.value = 'all';
+      campaignFilter.value = 'all';
+      platformFilter.value = 'all';
+      formatFilter.value = 'all';
+      monthStartFilter.value = 0;
+      monthEndFilter.value = 11;
+      collapsed.clear();
+      render();
+    });
+
+    jumpToStartBtn.addEventListener('click', () => {
+      timelinePane.scrollTo({ left: Math.max(0, getX(START_MARK) - 180), behavior: 'smooth' });
+    });
+
+    document.querySelectorAll('.zoomBtn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.zoomBtn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentView = btn.dataset.view;
+        render();
+      });
+    });
+
+    document.getElementById('expandGroups').addEventListener('click', () => {
+      collapsed.clear();
+      render();
+    });
+
+    document.getElementById('collapseGroups').addEventListener('click', () => {
+      collapsed = new Set(GROUPS.map(g => g.id));
+      render();
+    });
+  </script>
+</body>
+</html>
